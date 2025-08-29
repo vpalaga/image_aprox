@@ -43,7 +43,12 @@ def make_img(old, n):
     new_img_f = old.copy()
     draw = ImageDraw.Draw(new_img_f)
 
-    for _ in range(Inputs.lines_p_evo):
+    move_data_func = {}
+
+    for line_nr in range(Inputs.lines_p_evo):
         w, c = r_val(n)
-        draw.line(r_p(), fill=c, width=w) # draw a random line
-    return new_img_f
+        xy = r_p()
+        move_data_func[line_nr] = (xy, c, w)
+        draw.line(xy, fill=c, width=w) # draw a random line
+
+    return new_img_f, move_data_func
