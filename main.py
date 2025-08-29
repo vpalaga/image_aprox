@@ -1,0 +1,44 @@
+import cv2
+from PIL import Image
+import numpy as np
+from tqdm import tqdm
+import os
+
+from image_comparator import compare as img_compare
+from inputs import Inputs
+from shape_handler import make_img
+
+line_with_conf = Inputs.max_line_w / Inputs.evolution
+
+img = Image.new("RGB", (Inputs.w, Inputs.h), "white")
+
+progress = tqdm(total=Inputs.evolution, desc="Progress:")
+
+
+for _ in range(Inputs.evolution):
+
+    new_img = make_img(img, line_with_conf*_)
+
+    cv_im_orig = cv2.cvtColor(np.array(img),     cv2.COLOR_RGB2GRAY)
+    cv_im_new  = cv2.cvtColor(np.array(new_img), cv2.COLOR_RGB2GRAY)
+
+    orig_comp = img_compare(Inputs.img, cv_im_orig)
+    new_comp  = img_compare(Inputs.img, cv_im_new)
+
+    if new_comp > orig_comp:
+        #print(new_comp)
+
+        img = new_img
+
+    progress.update(1)
+
+img.show()
+
+# save as int.png
+outputs = os.listdir("./outputs/")
+img_num = 0
+for name in outputs:
+    if int(name.strip(".png")) >= img_num:
+        img_num = int(name.strip(".png"))
+
+img.save(f"./outputs/{img_num}.png")

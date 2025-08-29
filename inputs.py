@@ -1,0 +1,11 @@
+import cv2
+
+class Inputs:
+    img = cv2.imread("input_img.jpg", cv2.IMREAD_GRAYSCALE)
+    pixel_distance = 10
+    evolution = 2
+    max_line_w = 500
+    lines_p_evo = 3
+    color_sep = 50
+    w = img.shape[1]
+    h = img.shape[0]
