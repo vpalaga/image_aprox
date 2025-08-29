@@ -33,14 +33,13 @@ def gray_colour(flt: float) -> tuple[int, int, int]:
 
 def line(xy:tuple[int, int, int, int], wth:int, col:float) -> None:
     x_s, y_s, x_e, y_e = xy[0], xy[1], xy[2], xy[3]
-    pygame.draw.line(screen, gray_colour(col), (x_s, y_s), (x_e, y_e), wth)
+    pygame.draw.line(screen, col, (x_s, y_s), (x_e, y_e), wth)
 
 move_data = im()
-
-
+screen.fill((255, 255, 255))
+n = 0
 # Game loop.
 while True:
-    screen.fill((0, 0, 0))
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -49,8 +48,14 @@ while True:
 
     # Update.
 
-    # Draw.
-
+    # Draw
+    try:
+        xy, c, w = move_data[str(n)]
+        print(xy, c, w)
+        line(xy, w, c)
+        n+=1
+    except KeyError:
+        pass
     pygame.display.flip()
     fpsClock.tick(fps)
 

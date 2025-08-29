@@ -21,7 +21,7 @@ img = Image.new("RGB", (Inputs.w, Inputs.h), "white")
 
 progress = tqdm(total=Inputs.evolution, desc="Progress:")
 
-line_nr = 1
+line_nr = 0
 
 for _ in range(Inputs.evolution):
 
@@ -39,11 +39,14 @@ for _ in range(Inputs.evolution):
         img = new_img
 
         for key, val in part_move_dict.items():
-            move_data[line_nr] = ()
+            move_data[line_nr] = val
+            line_nr += 1
 
     progress.update(1)
 
 img.show()
+
+export(move_data)
 
 # save as int.png
 outputs = os.listdir("./outputs/")
