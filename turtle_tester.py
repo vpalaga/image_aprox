@@ -31,8 +31,12 @@ def gray_colour(flt: float) -> tuple[int, int, int]:
     return val, val, val
 
 
-def line(xy:tuple[int, int, int, int], wth:int, col:float) -> None:
-    x_s, y_s, x_e, y_e = xy[0], xy[1], xy[2], xy[3]
+def line(xy_f:tuple[int, int, int, int],
+         wth:int,
+         col:tuple[int, int, int]) -> None:
+
+    x_s, y_s, x_e, y_e = xy_f[0], xy_f[1], xy_f[2], xy_f[3]
+
     pygame.draw.line(screen, col, (x_s, y_s), (x_e, y_e), wth)
 
 move_data = im()
@@ -50,9 +54,14 @@ while True:
 
     # Draw
     try:
-        xy, c, w = move_data[str(n)]
-        print(xy, c, w)
-        line(xy, w, c)
+        t, xy, c, w = move_data[str(n)]
+        print(t, xy, c, w)
+        if t == "l":
+            line(xy, w, c)
+
+            # add draw object ex: circles, ...
+        else:
+            print("ERROR: unsupported draw object")
         n+=1
     except KeyError:
         pass

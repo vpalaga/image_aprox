@@ -48,7 +48,10 @@ def make_img(old, n):
     for line_nr in range(Inputs.lines_p_evo):
         w, c = r_val(n)
         xy = r_p()
-        move_data_func[line_nr] = (xy, c, w)
+
+        t = "l"
+        move_data_func[line_nr] = (t, xy, c, w)
+
         draw.line(xy, fill=c, width=w) # draw a random line
 
     return new_img_f, move_data_func
