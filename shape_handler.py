@@ -1,15 +1,16 @@
-from PIL import Image, ImageDraw
+from PIL import ImageDraw
 import random
 from inputs import Inputs
 
 
-def gray_colour(flt: float) -> tuple[int, int, int]:
+def gray_colour(flt: float, op=0.1) -> tuple[int, int, int, int]:
     val = round(flt * 255)
+    opacity = round(op*255)
     #print(f"val: {val}")
-    return val, val, val
+    return val, val, val, opacity
 
 
-def r_val(n) -> tuple[int, tuple[int, int, int]]:
+def r_val(n) -> tuple[int, tuple[int, int, int, int]]:
     choose_col_modus = random.randint(0, Inputs.color_sep) # have a chance for pure white or black
     if choose_col_modus <= 0:
         c = gray_colour(0)
@@ -41,7 +42,7 @@ def r_p():
 
 def make_img(old, n):
     new_img_f = old.copy()
-    draw = ImageDraw.Draw(new_img_f)
+    draw = ImageDraw.Draw(new_img_f, "RGBA")
 
     move_data_func = {}
 
@@ -51,6 +52,7 @@ def make_img(old, n):
 
         t = "l"
         move_data_func[line_nr] = (t, xy, c, w)
+        print(c)
 
         draw.line(xy, fill=c, width=w) # draw a random line
 

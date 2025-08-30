@@ -17,7 +17,7 @@ move_data = {}
 
 line_with_conf = Inputs.max_line_w / Inputs.evolution
 
-img = Image.new("RGB", (Inputs.w, Inputs.h), "white")
+img = Image.new("RGBA", (Inputs.w, Inputs.h), (255, 255, 255, 255))
 
 progress = tqdm(total=Inputs.evolution, desc="Progress:")
 
@@ -55,4 +55,4 @@ for name in outputs:
     if int(name.strip(".png")) >= img_num:
         img_num = int(name.strip(".png"))
 
-img.save(f"./outputs/{img_num}.png")
+img.save(f"./outputs/{img_num + 1}.png")
