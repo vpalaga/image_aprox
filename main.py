@@ -55,4 +55,4 @@ for name in outputs:
     if int(name.strip(".png")) >= img_num:
         img_num = int(name.strip(".png"))
 
-img.save(f"./outputs/{img_num}.png")
+img.save(f"./outputs/{img_num + 1}.png")
