@@ -9,11 +9,12 @@ from inputs import Inputs
 from shape_handler import make_img
 
 
-def export(data):
-    with open("moves.json", "w") as f:
-        json.dump(data, f, indent=4)  # indent=4 makes it pretty-printed
+def export(data, pth):
+    with open(f"{pth}.json", "w") as f:
+        json.dump(data, f, indent=5)  # indent=4 makes it pretty-printed
 
 move_data = {}
+acc_data  = {}
 
 line_with_conf = Inputs.max_line_w / Inputs.evolution
 
@@ -23,9 +24,9 @@ progress = tqdm(total=Inputs.evolution, desc="Progress:")
 
 line_nr = 0
 
-for _ in range(Inputs.evolution):
+for n in range(Inputs.evolution):
 
-    new_img, part_move_dict = make_img(img, line_with_conf*_)
+    new_img, part_move_dict = make_img(img, n, line_with_conf)
 
     cv_im_orig = cv2.cvtColor(np.array(img),     cv2.COLOR_RGB2GRAY)
     cv_im_new  = cv2.cvtColor(np.array(new_img), cv2.COLOR_RGB2GRAY)
@@ -42,11 +43,16 @@ for _ in range(Inputs.evolution):
             move_data[line_nr] = val
             line_nr += 1
 
+    acc_data[n] = orig_comp # save acc data for analyse
+
     progress.update(1)
+
+print(f"\nacc: {round(acc_data[n], ndigits=2)}")
 
 img.show()
 
-export(move_data)
+export(move_data, "moves")
+export(acc_data, "acc")
 
 # save as int.png
 outputs = os.listdir("./outputs/")

@@ -1,59 +1,36 @@
-from PIL import ImageDraw
-import random
+from PIL import ImageDraw, Image
 from inputs import Inputs
+import randomnes_handler
 
-
-def gray_colour(flt: float, op=0.1) -> tuple[int, int, int, int]:
-    val = round(flt * 255)
-    opacity = round(op*255)
-    #print(f"val: {val}")
-    return val, val, val, opacity
-
-
-def r_val(n) -> tuple[int, tuple[int, int, int, int]]:
-    choose_col_modus = random.randint(0, Inputs.color_sep) # have a chance for pure white or black
-    if choose_col_modus <= 0:
-        c = gray_colour(0)
-
-    elif choose_col_modus >= Inputs.color_sep:
-        c = gray_colour(1)
-
-    else:
-        c = gray_colour(1 / choose_col_modus)
-
-    a = round(Inputs.max_line_w - n - 100)
-    if a < 0:
-        a = 0
-    b = round(Inputs.max_line_w - n)
-
-    w = random.randint(a, b)
-    #print(a, b)
-    return w, c
-
-
-def r_p():
-
-    return (random.randint(0, Inputs.w),
-            random.randint(0, Inputs.h),
-            random.randint(0, Inputs.w),
-            random.randint(0, Inputs.h),
-            )
-
-
-def make_img(old, n):
+def make_img(old, n, line_cof):
     new_img_f = old.copy()
-    draw = ImageDraw.Draw(new_img_f, "RGBA")
+
+    lines_layer = Image.new("RGBA", old.size, (0, 0, 0, 0))
 
     move_data_func = {}
 
     for line_nr in range(Inputs.lines_p_evo):
-        w, c = r_val(n)
-        xy = r_p()
-
+        w, c = randomnes_handler.r_val(n, line_cof) # select line values
+        xy = randomnes_handler.r_p()
         t = "l"
-        move_data_func[line_nr] = (t, xy, c, w)
-        print(c)
+
+        move_data_func[line_nr] = (t, xy, c, w) # save line data
+
+        #  make a temporary layer for each line so they can be combined and overlapped
+        temp = Image.new("RGBA", old.size, (0, 0, 0, 0))
+        draw = ImageDraw.Draw(temp)
 
         draw.line(xy, fill=c, width=w) # draw a random line
 
+        lines_layer = Image.alpha_composite(lines_layer, temp)
+
+    # overlap lines with background
+    new_img_f = Image.alpha_composite(new_img_f, lines_layer)
+
     return new_img_f, move_data_func
+
+if __name__ == "__main__":
+    img = Image.new("RGBA", (500, 500), (255, 255, 255, 255))
+
+    img, _ = make_img(img, 100)
+    img.show()
